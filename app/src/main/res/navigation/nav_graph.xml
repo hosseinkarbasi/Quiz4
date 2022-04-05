@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/usersList">
+
+    <fragment
+        android:id="@+id/usersList"
+        android:name="com.example.quiz4.ui.users.UsersList"
+        android:label="UsersList" >
+        <action
+            android:id="@+id/action_usersList_to_showInfo"
+            app:destination="@id/showInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/showInfo"
+        android:name="com.example.quiz4.ui.showusersinfo.ShowInfo"
+        android:label="ShowInfo" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+</navigation>
