@@ -25,7 +25,8 @@ class ShowInfo : Fragment(R.layout.show_info) {
         binding = ShowInfoBinding.bind(view)
 
 
-        viewModel.showInfoUser(args.id).observe(viewLifecycleOwner) {
+        viewModel.showInfoUser(args.id)
+        viewModel.showInfo.observe(viewLifecycleOwner) {
             binding.tvFirstName.text = it.firstName
             binding.tvLastName.text = it.lastName
             binding.tvNationalCode.text = it.nationalCode

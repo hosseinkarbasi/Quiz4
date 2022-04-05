@@ -2,6 +2,7 @@ package com.example.quiz4.ui.users
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,17 +31,32 @@ class UsersList : Fragment(R.layout.users_list) {
         binding = DataBindingUtil.bind(view)!!
 
         setupRecyclerView()
+        showUsers()
+
+        binding.AddUser.setOnClickListener {
+            showCreateUserDialog()
+        }
+
+        myAdapter.setItemUserClick(object : RecyclerAdapter.ItemClick {
+            override fun viewClick(position: Int, v: View?) {
+                navController.navigate(UsersListDirections.actionUsersListToShowInfo((listUsers[position]._id)))
+            }
+        })
+    }
+
+    private fun showCreateUserDialog() {
+        val dialog = CustomDialogAddUser()
+        dialog.show(childFragmentManager, "custom")
+    }
+
+    private fun showUsers() {
         viewModel.getUsers()
         viewModel.usersList.observe(viewLifecycleOwner) {
             listUsers.clear()
             listUsers.addAll(it)
+            Log.d("hossein", it.toString())
             myAdapter.notifyDataSetChanged()
         }
-        myAdapter.setItemUserClick(object : RecyclerAdapter.ItemClick {
-            override fun viewClick(position: Int, v: View?) {
-                navController.navigate(UsersListDirections.actionUsersListToShowInfo(listUsers[position]._id))
-            }
-        })
     }
 
     private fun setupRecyclerView() {

@@ -1,9 +1,8 @@
 package com.example.quiz4.data
 
-import androidx.lifecycle.LiveData
+import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class UserRepository(
@@ -18,7 +17,20 @@ class UserRepository(
         return data
     }
 
-    fun showInfoUser(id: String): Flow<UsersListItem> {
-        return remoteDataSource.showInfo(id)
+    suspend fun showInfoUser(id: String): UsersListItem {
+        val data: UsersListItem
+        withContext(Dispatchers.IO) {
+            data = remoteDataSource.showInfo(id)
+        }
+        return data
+
+    }
+
+    suspend fun createUser(user: UserInfo): String {
+        val data: String
+        withContext(Dispatchers.IO) {
+            data = remoteDataSource.createUser(user)
+        }
+        return data
     }
 }
