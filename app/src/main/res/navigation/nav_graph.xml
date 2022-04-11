@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_usersList_to_showInfo"
             app:destination="@id/showInfo" />
+        <action
+            android:id="@+id/action_usersList_to_customDialogAddUser"
+            app:destination="@id/customDialogAddUser" />
     </fragment>
     <fragment
         android:id="@+id/showInfo"
@@ -20,4 +23,16 @@
             android:name="id"
             app:argType="string" />
     </fragment>
+    <dialog
+        android:id="@+id/customDialogAddUser"
+        android:name="com.example.quiz4.ui.users.CustomDialogAddUser"
+        android:label="CustomDialogAddUser" >
+        <action
+            android:id="@+id/action_customDialogAddUser_to_usersList"
+            app:destination="@id/usersList" />
+    </dialog>
+    <fragment
+        android:id="@+id/savedUsersFragment"
+        android:name="com.example.quiz4.ui.savedusers.SavedUsersFragment"
+        android:label="SavedUsersFragment" />
 </navigation>

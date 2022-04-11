@@ -22,9 +22,9 @@
             android:id="@+id/tvFirstName"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            app:autoSizeTextType="uniform"
-            android:layout_weight="1"
             android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,9 +34,9 @@
             android:id="@+id/tvLastName"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            app:autoSizeTextType="uniform"
-            android:layout_weight="1"
             android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:autoSizeTextType="uniform"
             app:layout_constraintEnd_toEndOf="@+id/tvFirstName"
             app:layout_constraintStart_toStartOf="@+id/tvFirstName"
             app:layout_constraintTop_toBottomOf="parent" />
@@ -45,9 +45,20 @@
             android:id="@+id/tvNationalCode"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            app:autoSizeTextType="uniform"
-            android:layout_weight="1"
             android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:autoSizeTextType="uniform"
+            tools:layout_editor_absoluteX="61dp"
+            tools:layout_editor_absoluteY="75dp" />
+
+        <TextView
+            android:id="@+id/tv_hobbie"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            app:autoSizeTextType="uniform"
             tools:layout_editor_absoluteX="61dp"
             tools:layout_editor_absoluteY="75dp" />
     </LinearLayout>

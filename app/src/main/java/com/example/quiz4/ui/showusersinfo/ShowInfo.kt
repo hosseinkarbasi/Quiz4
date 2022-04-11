@@ -10,7 +10,8 @@ import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.databinding.ShowInfoBinding
 import com.example.quiz4.ui.CustomViewModelFactory
-import com.example.quiz4.ui.users.UsersListViewModel
+import com.example.quiz4.ui.UsersListViewModel
+import com.example.quiz4.util.collectWithRepeatOnLifecycle
 
 class ShowInfo : Fragment(R.layout.show_info) {
 
@@ -24,9 +25,8 @@ class ShowInfo : Fragment(R.layout.show_info) {
         super.onViewCreated(view, savedInstanceState)
         binding = ShowInfoBinding.bind(view)
 
-
         viewModel.showInfoUser(args.id)
-        viewModel.showInfo.observe(viewLifecycleOwner) {
+        viewModel.showInfo.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             binding.tvFirstName.text = it.firstName
             binding.tvLastName.text = it.lastName
             binding.tvNationalCode.text = it.nationalCode

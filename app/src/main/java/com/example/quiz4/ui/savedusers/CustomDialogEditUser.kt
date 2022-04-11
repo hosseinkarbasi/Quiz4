@@ -1,4 +1,4 @@
-package com.example.quiz4.ui.users
+package com.example.quiz4.ui.savedusers
 
 import android.os.Bundle
 import android.view.*
@@ -15,7 +15,7 @@ import com.example.quiz4.ui.UsersListViewModel
 import com.google.android.material.textfield.TextInputEditText
 
 
-class CustomDialogAddUser : DialogFragment(R.layout.add_user_dialog) {
+class CustomDialogEditUser : DialogFragment(R.layout.add_user_dialog) {
 
     private val navController by lazy { findNavController() }
     private val viewModel: UsersListViewModel by viewModels(factoryProducer = {

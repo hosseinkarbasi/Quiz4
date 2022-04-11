@@ -12,6 +12,10 @@ class RecyclerAdapter(private var homeFeed: List<UsersListItem>) :
 
     lateinit var itemClick: ItemClick
 
+    fun addToDataBase(i: Int): UsersListItem {
+        return homeFeed[i]
+    }
+
     inner class CustomViewHolder(private var binding: ShowUserBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         fun bind(position: Int) {
