@@ -23,7 +23,7 @@ class LocalDataSource(private val userDao: UserDao) : IDataSource {
         return userDao.deleteUser(id)
     }
 
-    override suspend fun updateUser(user: UserWithHobbies) {
+    override suspend fun updateUser(user: User) {
         userDao.updateUser(user)
     }
 

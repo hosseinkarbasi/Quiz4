@@ -3,6 +3,7 @@ package com.example.quiz4.ui.savedusers
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
@@ -18,7 +19,7 @@ class RecyclerAdapterSavedUser(private var homeFeed: MutableList<UserWithHobbies
         return homeFeed[id].user
     }
 
-    fun deleteUserFromList(id:Int){
+    fun deleteUserFromList(id: Int) {
         homeFeed.removeAt(id)
     }
 
@@ -47,5 +48,21 @@ class RecyclerAdapterSavedUser(private var homeFeed: MutableList<UserWithHobbies
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         holder.bind(position)
+    }
+
+    class DiffCallBack : DiffUtil.ItemCallback<UserWithHobbies>() {
+        override fun areItemsTheSame(oldItem: UserWithHobbies, newItem: UserWithHobbies): Boolean {
+            return oldItem.user.id == newItem.user.id
+        }
+
+        override fun areContentsTheSame(
+            oldItem: UserWithHobbies,
+            newItem: UserWithHobbies
+        ): Boolean {
+            return oldItem.user.firstName == newItem.user.firstName &&
+                    oldItem.user.lastName == newItem.user.lastName &&
+                    oldItem.user.nationalCode == newItem.user.nationalCode
+        }
+
     }
 }

@@ -75,7 +75,7 @@ class UsersListViewModel(private val userRepository: UserRepository) : ViewModel
         }
     }
 
-    fun updateUser(user:UserWithHobbies){
+    fun updateUser(user: User) {
         viewModelScope.launch {
             userRepository.updateUser(user)
         }

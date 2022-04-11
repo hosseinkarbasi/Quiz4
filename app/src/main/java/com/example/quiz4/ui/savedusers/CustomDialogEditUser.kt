@@ -9,13 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.quiz4.App
 import com.example.quiz4.R
+import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.ui.CustomViewModelFactory
 import com.example.quiz4.ui.UsersListViewModel
 import com.google.android.material.textfield.TextInputEditText
 
-
-class CustomDialogEditUser : DialogFragment(R.layout.add_user_dialog) {
+class CustomDialogEditUser(private val user: User) :
+    DialogFragment(R.layout.add_user_dialog) {
 
     private val navController by lazy { findNavController() }
     private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
@@ -44,7 +45,7 @@ class CustomDialogEditUser : DialogFragment(R.layout.add_user_dialog) {
     }
 
     private fun setupView(view: View) {
-        val firsName = view.findViewById<TextInputEditText>(R.id.EdFirstName)
+        val firstName = view.findViewById<TextInputEditText>(R.id.EdFirstName)
         val lastName = view.findViewById<TextInputEditText>(R.id.EdLastName)
         val nationalCode = view.findViewById<TextInputEditText>(R.id.EdNatinalcode)
         val btnPositive = view.findViewById<AppCompatButton>(R.id.btnPositive)
@@ -53,19 +54,37 @@ class CustomDialogEditUser : DialogFragment(R.layout.add_user_dialog) {
         val checkBoxCoding = view.findViewById<CheckBox>(R.id.coding)
         val hobbies = mutableListOf<String>()
 
+        btnPositive.text = "EDIT"
+
+        firstName.setText(user.firstName)
+        lastName.setText(user.lastName)
+        nationalCode.setText(user.nationalCode)
+
         btnPositive.setOnClickListener {
             if (checkBoxMovie.isChecked) hobbies.add("movie")
             if (checkBoxCoding.isChecked) hobbies.add("coding")
-            val user = UserInfo(
-                firsName.text.toString(),
-                lastName.text.toString(),
-                nationalCode.text.toString(),
+            val firstNameText = firstName.text.toString()
+            val lastNameText = lastName.text.toString()
+            val nationalCodeText = nationalCode.text.toString()
+
+            val user = User(
+                user.id,
+                firstNameText,
+                lastNameText,
+                nationalCodeText,
+            )
+            val sendUser = UserInfo(
+                firstNameText,
+                lastNameText,
+                nationalCodeText,
                 hobbies as ArrayList<String>
             )
-            viewModel.createUser(user)
-                navController.navigate(
-                    CustomDialogAddUserDirections.actionCustomDialogAddUserToUsersList()
-                )
+
+            viewModel.createUser(sendUser)
+            viewModel.updateUser(user)
+            navController.navigate(
+                CustomDialogEditUserDirections.actionCustomDialogEditUserToSavedUsersFragment())
+
         }
         btnNegative.setOnClickListener {
             dismiss()

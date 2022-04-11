@@ -57,7 +57,8 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
                     }
                     ItemTouchHelper.LEFT -> {
                         val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
-                        viewModel.updateUser(user)
+                        val customDialog = CustomDialogEditUser(user)
+                        customDialog.show(childFragmentManager,"custom")
                     }
                 }
             }
@@ -74,7 +75,8 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun editUser() {
-
+    override fun onResume() {
+        showUsersSaved()
+        super.onResume()
     }
 }

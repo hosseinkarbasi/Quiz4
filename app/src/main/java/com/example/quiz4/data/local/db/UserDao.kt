@@ -23,7 +23,7 @@ interface UserDao {
     suspend fun deleteUser(id: String)
 
     @Update
-    fun updateUser(user: UserWithHobbies)
+    fun updateUser(user: User)
 
     @Update
     fun updateHobbies(hobbies: List<Hobie>)

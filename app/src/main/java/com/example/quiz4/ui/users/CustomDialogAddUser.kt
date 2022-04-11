@@ -62,7 +62,9 @@ class CustomDialogAddUser : DialogFragment(R.layout.add_user_dialog) {
                 nationalCode.text.toString(),
                 hobbies as ArrayList<String>
             )
+
             viewModel.createUser(user)
+
                 navController.navigate(
                     CustomDialogAddUserDirections.actionCustomDialogAddUserToUsersList()
                 )

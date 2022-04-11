@@ -63,7 +63,7 @@ class UserRepository(
         }
     }
 
-    suspend fun updateUser(user: UserWithHobbies){
+    suspend fun updateUser(user: User){
         withContext(Dispatchers.IO){
             localDataSource.updateUser(user)
         }

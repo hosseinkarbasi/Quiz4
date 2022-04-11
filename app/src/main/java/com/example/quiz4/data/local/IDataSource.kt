@@ -10,6 +10,6 @@ interface IDataSource {
     suspend fun insertHobbies(hobbies: List<Hobie>)
     suspend fun getUsers(): List<UserWithHobbies>
     suspend fun deleteUser(id: String)
-    suspend fun updateUser(user: UserWithHobbies)
+    suspend fun updateUser(user: User)
     suspend fun updateHobbies(hobbies: List<Hobie>)
 }
