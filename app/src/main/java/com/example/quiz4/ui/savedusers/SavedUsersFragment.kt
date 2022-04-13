@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.App
 import com.example.quiz4.R
-import com.example.quiz4.data.local.model.UserWithHobbies
 import com.example.quiz4.databinding.UsersSavedBinding
 import com.example.quiz4.ui.CustomViewModelFactory
 import com.example.quiz4.ui.UsersListViewModel
@@ -18,9 +17,8 @@ import com.example.quiz4.util.collectWithRepeatOnLifecycle
 
 class SavedUsersFragment : Fragment(R.layout.users_saved) {
 
-    private var listUsers = mutableListOf<UserWithHobbies>()
-    private lateinit var myAdapter: RecyclerAdapterSavedUser
     private lateinit var binding: UsersSavedBinding
+    val navController by lazy { findNavController() }
     private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
         CustomViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
     })
@@ -29,22 +27,21 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
         super.onViewCreated(view, savedInstanceState)
         binding = UsersSavedBinding.bind(view)
 
-        setupRecyclerView()
         showUsersSaved()
-        swipe()
     }
 
 
     private fun showUsersSaved() {
+        val myAdapter = RecyclerAdapterSavedUser()
         viewModel.getUsersFromDataBase()
         viewModel.getUsersFromDataBase.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
-            listUsers.clear()
-            listUsers.addAll(it)
-            myAdapter.notifyDataSetChanged()
+            myAdapter.submitList(it)
+            binding.savedUsersRv.adapter = myAdapter
         }
+        swipe(myAdapter)
     }
 
-    private fun swipe() {
+    private fun swipe(myAdapter: RecyclerAdapterSavedUser) {
         val swipe = object : SwipeG(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
@@ -52,31 +49,21 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
                     ItemTouchHelper.RIGHT -> {
                         val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
                         viewModel.deleteUser(user.id)
-                        myAdapter.deleteUserFromList(viewHolder.bindingAdapterPosition)
-                        myAdapter.notifyDataSetChanged()
+
                     }
                     ItemTouchHelper.LEFT -> {
                         val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
-                        val customDialog = CustomDialogEditUser(user)
-                        customDialog.show(childFragmentManager,"custom")
+                        navController.navigate(
+                            SavedUsersFragmentDirections.actionSavedUsersFragmentToCustomDialogEditUser(
+                                user
+                            )
+                        )
                     }
                 }
             }
         }
-
+        binding.savedUsersRv.adapter = myAdapter
         val touchHelper = ItemTouchHelper(swipe)
         touchHelper.attachToRecyclerView(binding.savedUsersRv)
-    }
-
-    private fun setupRecyclerView() {
-        myAdapter = RecyclerAdapterSavedUser(listUsers)
-        binding.savedUsersRv.adapter = myAdapter
-        binding.savedUsersRv.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-    }
-
-    override fun onResume() {
-        showUsersSaved()
-        super.onResume()
     }
 }

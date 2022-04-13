@@ -6,7 +6,10 @@ import com.example.quiz4.data.local.model.UserWithHobbies
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.util.Mapper
+import com.example.quiz4.util.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
@@ -23,13 +26,24 @@ class UserRepository(
         return data
     }
 
-    suspend fun showInfoUser(id: String): Response<UsersListItem> {
-        val data: Response<UsersListItem>
-        withContext(Dispatchers.IO) {
-            data = remoteDataSource.showInfo(id)
+    suspend fun showInfoUser(id: String): Flow<Result<UsersListItem>> {
+        return flow {
+            try {
+                emit(Result.Loading())
+                val response = remoteDataSource.showInfo(id)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        emit(Result.Success(it))
+                    }
+                } else {
+                    emit(Result.Error(Throwable("User Not Found")))
+                }
+            } catch (e: Exception) {
+                emit(Result.Error(Throwable("The network is currently unable to respond")))
+            }
         }
-        return data
     }
+
 
     suspend fun createUser(user: UserInfo): Response<String> {
         val data: Response<String>
@@ -63,8 +77,8 @@ class UserRepository(
         }
     }
 
-    suspend fun updateUser(user: User){
-        withContext(Dispatchers.IO){
+    suspend fun updateUser(user: User) {
+        withContext(Dispatchers.IO) {
             localDataSource.updateUser(user)
         }
     }

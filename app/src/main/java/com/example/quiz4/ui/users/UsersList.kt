@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.App
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.R
-import com.example.quiz4.data.local.model.Hobie
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.databinding.UsersListBinding
 import com.example.quiz4.ui.CustomViewModelFactory
 import com.example.quiz4.ui.UsersListViewModel
-import com.example.quiz4.util.Mapper
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 
@@ -44,12 +42,6 @@ class UsersList : Fragment(R.layout.users_list) {
         binding.AddUser.setOnClickListener {
             navController.navigate(UsersListDirections.actionUsersListToCustomDialogAddUser())
         }
-
-        myAdapter.setItemUserClick(object : RecyclerAdapter.ItemClick {
-            override fun viewClick(position: Int, v: View?) {
-
-            }
-        })
     }
 
     private fun showUsers() {
@@ -86,7 +78,7 @@ class UsersList : Fragment(R.layout.users_list) {
                         )
                     }
                     ItemTouchHelper.RIGHT -> {
-                        val user = myAdapter.addToDataBase(viewHolder.adapterPosition)
+                        val user = myAdapter.addToDataBase(viewHolder.bindingAdapterPosition)
                         navController.navigate(UsersListDirections.actionUsersListToShowInfo((user._id)))
                     }
                 }

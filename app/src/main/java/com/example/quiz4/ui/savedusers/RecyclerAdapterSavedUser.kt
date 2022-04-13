@@ -1,53 +1,45 @@
 package com.example.quiz4.ui.savedusers
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
-import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.databinding.ShowInfoSavedUsersBinding
-import com.example.quiz4.databinding.ShowUserBinding
 
-class RecyclerAdapterSavedUser(private var homeFeed: MutableList<UserWithHobbies>) :
-    RecyclerView.Adapter<RecyclerAdapterSavedUser.CustomViewHolder>() {
-
+class RecyclerAdapterSavedUser() :
+    ListAdapter<UserWithHobbies, RecyclerAdapterSavedUser.CustomViewHolder>(DiffCallBack()) {
 
     fun swipe(id: Int): User {
-        return homeFeed[id].user
-    }
-
-    fun deleteUserFromList(id: Int) {
-        homeFeed.removeAt(id)
+        return getItem(id).user
     }
 
     inner class CustomViewHolder(private var binding: ShowInfoSavedUsersBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(position: Int) {
-            binding.tvFirstName.text = homeFeed[position].user.firstName
-            binding.tvLastName.text = homeFeed[position].user.lastName
-            binding.tvNationalCode.text = homeFeed[position].user.nationalCode
-            binding.tvHobbie.text = homeFeed[position].hobie.map {
+        fun bind(item: UserWithHobbies) {
+
+            binding.tvFirstName.text = item.user.firstName
+            binding.tvLastName.text = item.user.lastName
+            binding.tvNationalCode.text = item.user.nationalCode
+            binding.tvHobbie.text = item.hobie.map {
                 it.name
             }.toString()
         }
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = ShowInfoSavedUsersBinding.inflate(inflater, parent, false)
-        return CustomViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
+        CustomViewHolder(
+            ShowInfoSavedUsersBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+        )
 
-    override fun getItemCount(): Int {
-        return homeFeed.count()
-    }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        holder.bind(position)
+        holder.bind(getItem(position))
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<UserWithHobbies>() {

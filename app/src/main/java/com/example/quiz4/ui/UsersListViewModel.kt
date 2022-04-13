@@ -6,6 +6,7 @@ import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
+import com.example.quiz4.util.Result
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -14,7 +15,7 @@ class UsersListViewModel(private val userRepository: UserRepository) : ViewModel
     private val _userList = MutableStateFlow<List<UsersListItem>>(emptyList())
     val userList = _userList.asStateFlow()
 
-    private val _showInfo = MutableSharedFlow<UsersListItem>()
+    private val _showInfo = MutableSharedFlow<Result<UsersListItem>>()
     val showInfo = _showInfo.asSharedFlow()
 
     private val _getUsersFromDataBase = MutableStateFlow<List<UserWithHobbies>>(emptyList())
@@ -34,9 +35,8 @@ class UsersListViewModel(private val userRepository: UserRepository) : ViewModel
 
     fun showInfoUser(id: String) {
         viewModelScope.launch {
-            val data = userRepository.showInfoUser(id)
-            if (data.isSuccessful) {
-                data.body()?.let { _showInfo.emit(it) }
+            userRepository.showInfoUser(id).collect {
+                _showInfo.emit(it)
             }
         }
     }

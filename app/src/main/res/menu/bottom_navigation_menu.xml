@@ -3,9 +3,11 @@
 
     <item
         android:id="@+id/usersList"
+        android:icon="@drawable/ic_baseline_supervised_user_circle_24"
         android:title="users" />
 
     <item
         android:id="@+id/savedUsersFragment"
+        android:icon="@drawable/ic_baseline_how_to_reg_24"
         android:title="Saved Users" />
 </menu>

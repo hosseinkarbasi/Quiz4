@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.data.local.model.User
@@ -15,9 +16,10 @@ import com.example.quiz4.ui.CustomViewModelFactory
 import com.example.quiz4.ui.UsersListViewModel
 import com.google.android.material.textfield.TextInputEditText
 
-class CustomDialogEditUser(private val user: User) :
+class CustomDialogEditUser() :
     DialogFragment(R.layout.add_user_dialog) {
 
+    private val args by navArgs<CustomDialogEditUserArgs>()
     private val navController by lazy { findNavController() }
     private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
         CustomViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
@@ -56,9 +58,9 @@ class CustomDialogEditUser(private val user: User) :
 
         btnPositive.text = "EDIT"
 
-        firstName.setText(user.firstName)
-        lastName.setText(user.lastName)
-        nationalCode.setText(user.nationalCode)
+        firstName.setText(args.user.firstName)
+        lastName.setText(args.user.lastName)
+        nationalCode.setText(args.user.nationalCode)
 
         btnPositive.setOnClickListener {
             if (checkBoxMovie.isChecked) hobbies.add("movie")
@@ -68,7 +70,7 @@ class CustomDialogEditUser(private val user: User) :
             val nationalCodeText = nationalCode.text.toString()
 
             val user = User(
-                user.id,
+                args.user.id,
                 firstNameText,
                 lastNameText,
                 nationalCodeText,
@@ -84,7 +86,6 @@ class CustomDialogEditUser(private val user: User) :
             viewModel.updateUser(user)
             navController.navigate(
                 CustomDialogEditUserDirections.actionCustomDialogEditUserToSavedUsersFragment())
-
         }
         btnNegative.setOnClickListener {
             dismiss()
