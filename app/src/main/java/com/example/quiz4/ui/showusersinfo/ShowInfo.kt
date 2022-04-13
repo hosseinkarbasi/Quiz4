@@ -34,9 +34,14 @@ class ShowInfo : Fragment(R.layout.show_info) {
                     binding.loading.visibility = View.VISIBLE
                 }
                 is Result.Error -> {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()}
+                    binding.loading.visibility = View.GONE
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+
+                }
                 is Result.Success -> {
+                    binding.loading.visibility = View.GONE
                     binding.user = it.data
+
                 }
             }
         }

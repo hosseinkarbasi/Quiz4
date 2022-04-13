@@ -3,56 +3,44 @@ package com.example.quiz4.ui.users
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.databinding.ShowUserBinding
 
-class RecyclerAdapter(private var homeFeed: List<UsersListItem>) :
-    RecyclerView.Adapter<RecyclerAdapter.CustomViewHolder>() {
+class RecyclerAdapter() :
+    ListAdapter<UsersListItem, RecyclerAdapter.CustomViewHolder>(DiffCallBack()) {
 
-    lateinit var itemClick: ItemClick
-
-    fun addToDataBase(i: Int): UsersListItem {
-        return homeFeed[i]
+    fun addToDataBase(id: Int): UsersListItem {
+        return getItem(id)
     }
 
     inner class CustomViewHolder(private var binding: ShowUserBinding) :
-        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-        fun bind(position: Int) {
-            binding.tvFirstName.text = homeFeed[position].firstName
-            binding.tvLastName.text = homeFeed[position].lastName
-            binding.tvNationalCode.text = homeFeed[position].nationalCode
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: UsersListItem) {
+            binding.tvFirstName.text = item.firstName
+            binding.tvLastName.text = item.lastName
+            binding.tvNationalCode.text = item.nationalCode
         }
-
-        init {
-            binding.root.setOnClickListener(this)
-        }
-
-        override fun onClick(p0: View?) {
-            itemClick.viewClick(adapterPosition, p0)
-        }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = ShowUserBinding.inflate(inflater, parent, false)
-        return CustomViewHolder(view)
-    }
-
-    override fun getItemCount(): Int {
-        return homeFeed.count()
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
+        CustomViewHolder(
+            ShowUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        holder.bind(position)
+        holder.bind(getItem(position))
     }
 
-    interface ItemClick {
-        fun viewClick(position: Int, v: View?)
-    }
+    class DiffCallBack : DiffUtil.ItemCallback<UsersListItem>() {
+        override fun areItemsTheSame(oldItem: UsersListItem, newItem: UsersListItem): Boolean {
+            return oldItem._id == newItem._id
+        }
 
-    fun setItemUserClick(itemClick: ItemClick) {
-        this.itemClick = itemClick
+        override fun areContentsTheSame(oldItem: UsersListItem, newItem: UsersListItem): Boolean {
+            return oldItem == newItem
+        }
     }
 }

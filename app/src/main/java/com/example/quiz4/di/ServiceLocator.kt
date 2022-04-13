@@ -6,7 +6,6 @@ import com.example.quiz4.data.local.LocalDataSource
 import com.example.quiz4.data.local.db.AppDataBase
 import com.example.quiz4.data.remote.RemoteDataSource
 import com.example.quiz4.data.remote.network.NetworkManager
-import java.time.LocalDate
 
 class ServiceLocator(application: Application) {
 

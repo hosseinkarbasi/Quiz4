@@ -12,24 +12,23 @@ import kotlinx.coroutines.launch
 
 class UsersListViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    private val _userList = MutableStateFlow<List<UsersListItem>>(emptyList())
+    private val _userList = MutableStateFlow<Result<List<UsersListItem?>>>(Result.Success(emptyList()))
     val userList = _userList.asStateFlow()
 
-    private val _showInfo = MutableSharedFlow<Result<UsersListItem>>()
-    val showInfo = _showInfo.asSharedFlow()
+    private val _showInfo = MutableStateFlow<Result<UsersListItem?>>(Result.Success(null))
+    val showInfo = _showInfo.asStateFlow()
 
     private val _getUsersFromDataBase = MutableStateFlow<List<UserWithHobbies>>(emptyList())
-    val getUsersFromDataBase = _getUsersFromDataBase.asSharedFlow()
+    val getUsersFromDataBase = _getUsersFromDataBase.asStateFlow()
 
     private val _createUser = MutableSharedFlow<String>()
     val createUser = _createUser.asSharedFlow()
 
     fun getUsers() {
         viewModelScope.launch {
-            val data = userRepository.getUsers()
-            if (data.isSuccessful) {
-                data.body()?.let { _userList.emit(it) }
-            }
+          userRepository.getUsers().collect{
+              _userList.emit(it)
+          }
         }
     }
 

@@ -18,15 +18,25 @@ class UserRepository(
     private val localDataSource: IDataSource
 ) {
 
-    suspend fun getUsers(): Response<List<UsersListItem>> {
-        val data: Response<List<UsersListItem>>
-        withContext(Dispatchers.IO) {
-            data = remoteDataSource.getUsers()
+    suspend fun getUsers(): Flow<Result<List<UsersListItem?>>> {
+        return flow {
+            try {
+                emit(Result.Loading())
+                val response = remoteDataSource.getUsers()
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        emit(Result.Success(it))
+                    }
+                } else {
+                    emit(Result.Error("something went wrong..."))
+                }
+            } catch (e: Exception) {
+                emit(Result.Error("The network is currently unable to respond"))
+            }
         }
-        return data
     }
 
-    suspend fun showInfoUser(id: String): Flow<Result<UsersListItem>> {
+    suspend fun showInfoUser(id: String): Flow<Result<UsersListItem?>> {
         return flow {
             try {
                 emit(Result.Loading())
@@ -36,14 +46,13 @@ class UserRepository(
                         emit(Result.Success(it))
                     }
                 } else {
-                    emit(Result.Error(Throwable("User Not Found")))
+                    emit(Result.Error("User Not Found"))
                 }
             } catch (e: Exception) {
-                emit(Result.Error(Throwable("The network is currently unable to respond")))
+                emit(Result.Error("The network is currently unable to respond"))
             }
         }
     }
-
 
     suspend fun createUser(user: UserInfo): Response<String> {
         val data: Response<String>
@@ -52,6 +61,7 @@ class UserRepository(
         }
         return data
     }
+
 
     suspend fun insertUser(user: User) {
         withContext(Dispatchers.IO) {

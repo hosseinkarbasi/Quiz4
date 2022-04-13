@@ -55,6 +55,5 @@ class RecyclerAdapterSavedUser() :
                     oldItem.user.lastName == newItem.user.lastName &&
                     oldItem.user.nationalCode == newItem.user.nationalCode
         }
-
     }
 }

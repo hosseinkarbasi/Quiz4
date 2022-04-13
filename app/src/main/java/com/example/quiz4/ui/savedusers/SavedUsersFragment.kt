@@ -49,7 +49,6 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
                     ItemTouchHelper.RIGHT -> {
                         val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
                         viewModel.deleteUser(user.id)
-
                     }
                     ItemTouchHelper.LEFT -> {
                         val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
