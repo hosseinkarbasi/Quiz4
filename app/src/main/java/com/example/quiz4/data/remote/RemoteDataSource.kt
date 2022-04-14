@@ -6,6 +6,7 @@ import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.data.remote.network.UserApi
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 import retrofit2.Response
 
 class RemoteDataSource(private val userApi: UserApi) : DataSource {
@@ -19,5 +20,9 @@ class RemoteDataSource(private val userApi: UserApi) : DataSource {
 
     override suspend fun createUser(user: UserInfo): Response<String> {
         return userApi.createAccount(user)
+    }
+
+    override suspend fun uploadImage(id: String, image: MultipartBody.Part): Response<Any> {
+        return userApi.uploadImage(id, image)
     }
 }

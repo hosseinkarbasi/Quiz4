@@ -3,6 +3,7 @@ package com.example.quiz4.data.remote.network
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -17,4 +18,8 @@ interface UserApi {
 
     @POST("users")
     suspend fun createAccount(@Body userData: UserInfo): Response<String>
+
+    @Multipart
+    @POST("users/{id}/image")
+    suspend fun uploadImage(@Path("id") id: String, @Part image: MultipartBody.Part): Response<Any>
 }

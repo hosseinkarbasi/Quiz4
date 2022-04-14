@@ -9,13 +9,17 @@ import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.util.Result
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+
 
 class UsersListViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    private val _userList = MutableStateFlow<Result<List<UsersListItem?>>>(Result.Success(emptyList()))
+    private val _userList =
+        MutableStateFlow<Result<List<UsersListItem>>>(Result.Success(emptyList()))
     val userList = _userList.asStateFlow()
 
-    private val _showInfo = MutableStateFlow<Result<UsersListItem?>>(Result.Success(null))
+    private val _showInfo = MutableStateFlow<Result<UsersListItem>>(Result.Success(null))
     val showInfo = _showInfo.asStateFlow()
 
     private val _getUsersFromDataBase = MutableStateFlow<List<UserWithHobbies>>(emptyList())
@@ -26,9 +30,9 @@ class UsersListViewModel(private val userRepository: UserRepository) : ViewModel
 
     fun getUsers() {
         viewModelScope.launch {
-          userRepository.getUsers().collect{
-              _userList.emit(it)
-          }
+            userRepository.getUsers().collect {
+                _userList.emit(it)
+            }
         }
     }
 
@@ -46,6 +50,14 @@ class UsersListViewModel(private val userRepository: UserRepository) : ViewModel
             if (data.isSuccessful) {
                 data.body()?.let { _createUser.emit(it) }
             }
+        }
+    }
+
+    fun uploadImage(id: String, image: ByteArray) {
+        val multipartBody = MultipartBody.create(MediaType.parse("image/*"), image)
+        val req = MultipartBody.Part.createFormData("image", "image.jpg", multipartBody)
+        viewModelScope.launch {
+            userRepository.uploadImage(id, req)
         }
     }
 

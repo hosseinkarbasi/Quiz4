@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import retrofit2.Response
 
 class UserRepository(
@@ -18,40 +19,14 @@ class UserRepository(
     private val localDataSource: IDataSource
 ) {
 
-    suspend fun getUsers(): Flow<Result<List<UsersListItem?>>> {
-        return flow {
-            try {
-                emit(Result.Loading())
-                val response = remoteDataSource.getUsers()
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        emit(Result.Success(it))
-                    }
-                } else {
-                    emit(Result.Error("something went wrong..."))
-                }
-            } catch (e: Exception) {
-                emit(Result.Error("The network is currently unable to respond"))
-            }
-        }
+    suspend fun getUsers(): Flow<Result<List<UsersListItem>>> {
+
+        return requestFlow { remoteDataSource.getUsers() }
     }
 
-    suspend fun showInfoUser(id: String): Flow<Result<UsersListItem?>> {
-        return flow {
-            try {
-                emit(Result.Loading())
-                val response = remoteDataSource.showInfo(id)
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        emit(Result.Success(it))
-                    }
-                } else {
-                    emit(Result.Error("User Not Found"))
-                }
-            } catch (e: Exception) {
-                emit(Result.Error("The network is currently unable to respond"))
-            }
-        }
+    suspend fun showInfoUser(id: String): Flow<Result<UsersListItem>> {
+        return requestFlow { remoteDataSource.showInfo(id) }
+
     }
 
     suspend fun createUser(user: UserInfo): Response<String> {
@@ -62,6 +37,9 @@ class UserRepository(
         return data
     }
 
+    suspend fun uploadImage(id: String, image: MultipartBody.Part) {
+        remoteDataSource.uploadImage(id, image)
+    }
 
     suspend fun insertUser(user: User) {
         withContext(Dispatchers.IO) {
@@ -90,6 +68,24 @@ class UserRepository(
     suspend fun updateUser(user: User) {
         withContext(Dispatchers.IO) {
             localDataSource.updateUser(user)
+        }
+    }
+
+    private inline fun <T> requestFlow(
+        crossinline apiCall: suspend () -> Response<T>
+    ): Flow<Result<T>> {
+        return flow {
+            try {
+                emit(Result.Loading())
+                val response = apiCall()
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        emit(Result.Success(it))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(Result.Error("Please Check Your Internet"))
+            }
         }
     }
 }
