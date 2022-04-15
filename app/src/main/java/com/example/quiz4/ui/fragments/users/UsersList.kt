@@ -1,4 +1,4 @@
-package com.example.quiz4.ui.users
+package com.example.quiz4.ui.fragments.users
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -14,8 +14,6 @@ import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.databinding.UsersListBinding
-import com.example.quiz4.ui.CustomViewModelFactory
-import com.example.quiz4.ui.UsersListViewModel
 import com.example.quiz4.util.Result
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
@@ -25,7 +23,7 @@ class UsersList : Fragment(R.layout.users_list) {
     private lateinit var binding: UsersListBinding
     val navController by lazy { findNavController() }
     private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
-        CustomViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
+        UserListViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
     })
 
     @SuppressLint("NotifyDataSetChanged")
@@ -40,22 +38,26 @@ class UsersList : Fragment(R.layout.users_list) {
         }
     }
 
-    private fun showUsers() {
+
+    private fun showUsers() = binding.apply {
         val myAdapter = RecyclerAdapter()
-        viewModel.getUsers()
-        viewModel.userList.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
+        viewModel.getUsers.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             when (it) {
                 is Result.Loading -> {
-                    binding.loading.visibility = View.VISIBLE
+                    loading.visible()
                 }
                 is Result.Error -> {
-                    binding.loading.visibility = View.GONE
+                    retry.visible()
+                    loading.visible()
+                    retry.setOnClickListener {
+                        viewModel.retry()
+                    }
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Success -> {
-                    binding.loading.visibility = View.GONE
+                    loading.gone()
                     myAdapter.submitList(it.data)
-                    binding.recyclerViewMain.adapter = myAdapter
+                    recyclerViewMain.adapter = myAdapter
                 }
             }
         }
@@ -89,5 +91,13 @@ class UsersList : Fragment(R.layout.users_list) {
         binding.recyclerViewMain.adapter = adapter
         val touchHelper = ItemTouchHelper(swipe)
         touchHelper.attachToRecyclerView(binding.recyclerViewMain)
+    }
+
+    private fun View.visible() {
+        visibility = View.VISIBLE
+    }
+
+    private fun View.gone() {
+        visibility = View.GONE
     }
 }

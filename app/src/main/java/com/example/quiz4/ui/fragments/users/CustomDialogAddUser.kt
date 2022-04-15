@@ -1,4 +1,4 @@
-package com.example.quiz4.ui.users
+package com.example.quiz4.ui.fragments.users
 
 import android.os.Bundle
 import android.view.*
@@ -10,16 +10,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.data.remote.model.UserInfo
-import com.example.quiz4.ui.CustomViewModelFactory
-import com.example.quiz4.ui.UsersListViewModel
+import com.example.quiz4.ui.fragments.savedusers.SavedUsersViewModel
 import com.google.android.material.textfield.TextInputEditText
 
 
 class CustomDialogAddUser : DialogFragment(R.layout.add_user_dialog) {
 
     private val navController by lazy { findNavController() }
-    private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
-        CustomViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
+    private val viewModel: SavedUsersViewModel by viewModels(factoryProducer = {
+        UserListViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
     })
 
     override fun onCreateView(

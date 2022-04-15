@@ -1,15 +1,12 @@
 package com.example.quiz4.data.remote
 
-import com.example.quiz4.data.DataSource
-import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.data.remote.network.UserApi
-import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import retrofit2.Response
 
-class RemoteDataSource(private val userApi: UserApi) : DataSource {
+class RemoteDataSource(private val userApi: UserApi) : IRemoteDataSource {
     override suspend fun getUsers(): Response<List<UsersListItem>> {
         return userApi.getUsers()
     }

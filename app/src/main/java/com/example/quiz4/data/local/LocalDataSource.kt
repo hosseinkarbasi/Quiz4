@@ -5,7 +5,7 @@ import com.example.quiz4.data.local.model.Hobie
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
 
-class LocalDataSource(private val userDao: UserDao) : IDataSource {
+class LocalDataSource(private val userDao: UserDao) : ILocalDataSource {
 
     override suspend fun insertUser(user: User) {
         userDao.insertUser(user)

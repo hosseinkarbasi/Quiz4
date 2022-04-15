@@ -1,8 +1,9 @@
 package com.example.quiz4.data
 
-import com.example.quiz4.data.local.IDataSource
+import com.example.quiz4.data.local.ILocalDataSource
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
+import com.example.quiz4.data.remote.IRemoteDataSource
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.util.Mapper
@@ -15,59 +16,59 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 
 class UserRepository(
-    private val remoteDataSource: DataSource,
-    private val localDataSource: IDataSource
+    private val remoteIRemoteDataSource: IRemoteDataSource,
+    private val localLocalDataSource: ILocalDataSource
 ) {
 
     suspend fun getUsers(): Flow<Result<List<UsersListItem>>> {
 
-        return requestFlow { remoteDataSource.getUsers() }
+        return requestFlow { remoteIRemoteDataSource.getUsers() }
     }
 
     suspend fun showInfoUser(id: String): Flow<Result<UsersListItem>> {
-        return requestFlow { remoteDataSource.showInfo(id) }
+        return requestFlow { remoteIRemoteDataSource.showInfo(id) }
 
     }
 
     suspend fun createUser(user: UserInfo): Response<String> {
         val data: Response<String>
         withContext(Dispatchers.IO) {
-            data = remoteDataSource.createUser(user)
+            data = remoteIRemoteDataSource.createUser(user)
         }
         return data
     }
 
     suspend fun uploadImage(id: String, image: MultipartBody.Part) {
-        remoteDataSource.uploadImage(id, image)
+        remoteIRemoteDataSource.uploadImage(id, image)
     }
 
     suspend fun insertUser(user: User) {
         withContext(Dispatchers.IO) {
-            localDataSource.insertUser(user)
+            localLocalDataSource.insertUser(user)
         }
     }
 
     suspend fun insertHobbies(id: String) {
         withContext(Dispatchers.IO) {
-            val user = remoteDataSource.showInfo(id)
+            val user = remoteIRemoteDataSource.showInfo(id)
             val hobbies = Mapper.transformToHobie(user.body()!!)
-            localDataSource.insertHobbies(hobbies)
+            localLocalDataSource.insertHobbies(hobbies)
         }
     }
 
     suspend fun getUsersFromDataBase(): List<UserWithHobbies> {
-        return localDataSource.getUsers()
+        return localLocalDataSource.getUsers()
     }
 
     suspend fun deleteUser(id: String) {
         withContext(Dispatchers.IO) {
-            localDataSource.deleteUser(id)
+            localLocalDataSource.deleteUser(id)
         }
     }
 
     suspend fun updateUser(user: User) {
         withContext(Dispatchers.IO) {
-            localDataSource.updateUser(user)
+            localLocalDataSource.updateUser(user)
         }
     }
 

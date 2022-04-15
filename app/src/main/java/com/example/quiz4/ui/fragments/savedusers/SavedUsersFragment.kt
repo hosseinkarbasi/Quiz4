@@ -1,4 +1,4 @@
-package com.example.quiz4.ui.savedusers
+package com.example.quiz4.ui.fragments.savedusers
 
 import android.os.Bundle
 import android.view.View
@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.databinding.UsersSavedBinding
-import com.example.quiz4.ui.CustomViewModelFactory
-import com.example.quiz4.ui.UsersListViewModel
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 
@@ -19,8 +17,8 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
 
     private lateinit var binding: UsersSavedBinding
     val navController by lazy { findNavController() }
-    private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
-        CustomViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
+    private val viewModel: SavedUsersViewModel by viewModels(factoryProducer = {
+        SavedUsersViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
     })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,7 +27,6 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
 
         showUsersSaved()
     }
-
 
     private fun showUsersSaved() {
         val myAdapter = RecyclerAdapterSavedUser()

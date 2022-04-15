@@ -1,4 +1,4 @@
-package com.example.quiz4.ui.savedusers
+package com.example.quiz4.ui.fragments.savedusers
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

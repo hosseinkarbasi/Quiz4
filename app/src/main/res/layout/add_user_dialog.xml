@@ -73,24 +73,30 @@
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginBottom="16dp"
         android:text="save"
         android:textColor="#5EBA7D"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/movie"
-        app:layout_constraintTop_toBottomOf="@+id/movie" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+        app:layout_constraintVertical_bias="0.061" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNegative"
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
         android:text="Cancel"
         android:textColor="#CC0000"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/coding"
-        app:layout_constraintTop_toBottomOf="@+id/coding" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/movie"
+        app:layout_constraintTop_toBottomOf="@+id/movie"
+        app:layout_constraintVertical_bias="0.061" />
 
     <CheckBox
         android:id="@+id/coding"
@@ -106,9 +112,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="44dp"
         android:text="Movie"
-        app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+        app:layout_constraintStart_toStartOf="@+id/coding"
+        app:layout_constraintTop_toBottomOf="@+id/coding" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

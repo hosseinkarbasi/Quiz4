@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/usersList"
-        android:name="com.example.quiz4.ui.users.UsersList"
+        android:name="com.example.quiz4.ui.fragments.users.UsersList"
         android:label="UsersList" >
         <action
             android:id="@+id/action_usersList_to_showInfo"
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/showInfo"
-        android:name="com.example.quiz4.ui.showusersinfo.ShowInfo"
+        android:name="com.example.quiz4.ui.fragments.showusersinfo.ShowInfo"
         android:label="ShowInfo" >
         <argument
             android:name="id"
@@ -25,7 +25,7 @@
     </fragment>
     <dialog
         android:id="@+id/customDialogAddUser"
-        android:name="com.example.quiz4.ui.users.CustomDialogAddUser"
+        android:name="com.example.quiz4.ui.fragments.users.CustomDialogAddUser"
         android:label="CustomDialogAddUser" >
         <action
             android:id="@+id/action_customDialogAddUser_to_usersList"
@@ -33,7 +33,7 @@
     </dialog>
     <fragment
         android:id="@+id/savedUsersFragment"
-        android:name="com.example.quiz4.ui.savedusers.SavedUsersFragment"
+        android:name="com.example.quiz4.ui.fragments.savedusers.SavedUsersFragment"
         android:label="SavedUsersFragment" >
         <action
             android:id="@+id/action_savedUsersFragment_to_customDialogEditUser"
@@ -41,7 +41,7 @@
     </fragment>
     <dialog
         android:id="@+id/customDialogEditUser"
-        android:name="com.example.quiz4.ui.savedusers.CustomDialogEditUser"
+        android:name="com.example.quiz4.ui.fragments.savedusers.CustomDialogEditUser"
         android:label="CustomDialogEditUser" >
         <argument
             android:name="user"
