@@ -7,18 +7,23 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.databinding.ShowInfoBinding
 import com.example.quiz4.util.Result
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
 
+@AndroidEntryPoint
 class ShowInfo : Fragment(R.layout.show_info) {
+
     var imageByteArray: ByteArray? = null
+    private lateinit var binding: ShowInfoBinding
+    private val args by navArgs<ShowInfoArgs>()
+    private val viewModel by viewModels<ShowInfoVIewModel>()
 
     private val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()) {
         val imageUri = context?.contentResolver?.openInputStream(it)?.readBytes()
@@ -30,12 +35,6 @@ class ShowInfo : Fragment(R.layout.show_info) {
         imageByteArray = it.toByteArray()
         binding.imgProfile.setImageBitmap(it)
     }
-
-    private lateinit var binding: ShowInfoBinding
-    private val args by navArgs<ShowInfoArgs>()
-    private val viewModel: ShowInfoVIewModel by activityViewModels(factoryProducer = {
-        ShowInfoViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
-    })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

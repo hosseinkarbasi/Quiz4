@@ -1,14 +1,18 @@
 package com.example.quiz4.ui.fragments.users
 
 import androidx.lifecycle.*
-import com.example.quiz4.data.UserRepository
+import com.example.quiz4.data.repository.UserRepository
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.util.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UsersListViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class UsersListViewModel @Inject constructor
+    (private val userRepository: UserRepository) : ViewModel() {
 
     private val channel = Channel<Boolean> { }
 

@@ -7,19 +7,18 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.databinding.UsersSavedBinding
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SavedUsersFragment : Fragment(R.layout.users_saved) {
 
     private lateinit var binding: UsersSavedBinding
+    private val viewModel by viewModels<SavedUsersViewModel>()
     val navController by lazy { findNavController() }
-    private val viewModel: SavedUsersViewModel by viewModels(factoryProducer = {
-        SavedUsersViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
-    })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

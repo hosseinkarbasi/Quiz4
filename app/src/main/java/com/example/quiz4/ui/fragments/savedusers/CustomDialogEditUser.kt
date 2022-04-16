@@ -8,21 +8,19 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.remote.model.UserInfo
-import com.example.quiz4.ui.fragments.users.UserListViewModelFactory
 import com.google.android.material.textfield.TextInputEditText
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CustomDialogEditUser() :
     DialogFragment(R.layout.add_user_dialog) {
 
     private val args by navArgs<CustomDialogEditUserArgs>()
     private val navController by lazy { findNavController() }
-    private val viewModel: SavedUsersViewModel by viewModels(factoryProducer = {
-        UserListViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
-    })
+    private val viewModel by viewModels<SavedUsersViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

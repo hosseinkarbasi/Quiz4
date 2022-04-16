@@ -10,21 +10,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quiz4.App
 import com.example.quiz4.R
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.databinding.UsersListBinding
 import com.example.quiz4.util.Result
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UsersList : Fragment(R.layout.users_list) {
 
     private lateinit var binding: UsersListBinding
     val navController by lazy { findNavController() }
-    private val viewModel: UsersListViewModel by viewModels(factoryProducer = {
-        UserListViewModelFactory((requireActivity().application as App).serviceLocator.userRepository)
-    })
+    private val viewModel by viewModels<UsersListViewModel>()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

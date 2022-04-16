@@ -1,11 +1,11 @@
-package com.example.quiz4.data
+package com.example.quiz4.data.repository
 
-import com.example.quiz4.data.local.ILocalDataSource
+import com.example.quiz4.data.local.db.UserDao
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
-import com.example.quiz4.data.remote.IRemoteDataSource
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
+import com.example.quiz4.data.remote.network.UserApi
 import com.example.quiz4.util.Mapper
 import com.example.quiz4.util.Result
 import kotlinx.coroutines.Dispatchers
@@ -14,61 +14,64 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepository(
-    private val remoteIRemoteDataSource: IRemoteDataSource,
-    private val localLocalDataSource: ILocalDataSource
+@Singleton
+class UserRepository @Inject constructor(
+    private val remoteDataSource: UserApi,
+    private val localDataSource: UserDao
 ) {
 
     suspend fun getUsers(): Flow<Result<List<UsersListItem>>> {
 
-        return requestFlow { remoteIRemoteDataSource.getUsers() }
+        return requestFlow { remoteDataSource.getUsers() }
     }
 
     suspend fun showInfoUser(id: String): Flow<Result<UsersListItem>> {
-        return requestFlow { remoteIRemoteDataSource.showInfo(id) }
+        return requestFlow { remoteDataSource.getShowInfo(id) }
 
     }
 
     suspend fun createUser(user: UserInfo): Response<String> {
         val data: Response<String>
         withContext(Dispatchers.IO) {
-            data = remoteIRemoteDataSource.createUser(user)
+            data = remoteDataSource.createAccount(user)
         }
         return data
     }
 
     suspend fun uploadImage(id: String, image: MultipartBody.Part) {
-        remoteIRemoteDataSource.uploadImage(id, image)
+        remoteDataSource.uploadImage(id, image)
     }
 
     suspend fun insertUser(user: User) {
         withContext(Dispatchers.IO) {
-            localLocalDataSource.insertUser(user)
+            localDataSource.insertUser(user)
         }
     }
 
     suspend fun insertHobbies(id: String) {
         withContext(Dispatchers.IO) {
-            val user = remoteIRemoteDataSource.showInfo(id)
+            val user = remoteDataSource.getShowInfo(id)
             val hobbies = Mapper.transformToHobie(user.body()!!)
-            localLocalDataSource.insertHobbies(hobbies)
+            localDataSource.insertHobbies(hobbies)
         }
     }
 
     suspend fun getUsersFromDataBase(): List<UserWithHobbies> {
-        return localLocalDataSource.getUsers()
+        return localDataSource.getUsers()
     }
 
     suspend fun deleteUser(id: String) {
         withContext(Dispatchers.IO) {
-            localLocalDataSource.deleteUser(id)
+            localDataSource.deleteUser(id)
         }
     }
 
     suspend fun updateUser(user: User) {
         withContext(Dispatchers.IO) {
-            localLocalDataSource.updateUser(user)
+            localDataSource.updateUser(user)
         }
     }
 
