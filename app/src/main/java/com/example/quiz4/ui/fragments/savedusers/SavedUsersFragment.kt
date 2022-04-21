@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.R
+import com.example.quiz4.data.local.model.User
 import com.example.quiz4.databinding.UsersSavedBinding
+import com.example.quiz4.ui.dialogs.LocalUserDialog
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,23 +17,22 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SavedUsersFragment : Fragment(R.layout.users_saved) {
 
-    private lateinit var binding: UsersSavedBinding
+    private var _binding: UsersSavedBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModels<SavedUsersViewModel>()
-    val navController by lazy { findNavController() }
+    private lateinit var myAdapter: RecyclerAdapterSavedUser
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = UsersSavedBinding.bind(view)
+        _binding = UsersSavedBinding.bind(view)
 
+        initRecyclerView()
         showUsersSaved()
     }
 
     private fun showUsersSaved() {
-        val myAdapter = RecyclerAdapterSavedUser()
-        viewModel.getUsersFromDataBase()
         viewModel.getUsersFromDataBase.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             myAdapter.submitList(it)
-            binding.savedUsersRv.adapter = myAdapter
         }
         swipe(myAdapter)
     }
@@ -40,25 +40,44 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
     private fun swipe(myAdapter: RecyclerAdapterSavedUser) {
         val swipe = object : SwipeG(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
 
                 when (direction) {
                     ItemTouchHelper.RIGHT -> {
-                        val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
+
                         viewModel.deleteUser(user.id)
                     }
                     ItemTouchHelper.LEFT -> {
-                        val user = myAdapter.swipe(viewHolder.bindingAdapterPosition)
-                        navController.navigate(
-                            SavedUsersFragmentDirections.actionSavedUsersFragmentToCustomDialogEditUser(
-                                user
+
+                        val dialog = LocalUserDialog {
+                            viewModel.createNewUser(it)
+                            viewModel.updateUser(
+                                User(
+                                    user.id,
+                                    it.firstName.toString(),
+                                    it.lastName.toString(),
+                                    it.nationalCode.toString()
+                                )
                             )
-                        )
+                        }
+                        dialog.show(childFragmentManager, "EditUserDialog")
+                        myAdapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     }
                 }
             }
         }
-        binding.savedUsersRv.adapter = myAdapter
         val touchHelper = ItemTouchHelper(swipe)
         touchHelper.attachToRecyclerView(binding.savedUsersRv)
+    }
+
+    private fun initRecyclerView() {
+        myAdapter = RecyclerAdapterSavedUser()
+        binding.savedUsersRv.adapter = myAdapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.savedUsersRv.adapter = null
+        _binding = null
     }
 }

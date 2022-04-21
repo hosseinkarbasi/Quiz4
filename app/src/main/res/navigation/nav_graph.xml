@@ -6,48 +6,37 @@
 
     <fragment
         android:id="@+id/usersList"
-        android:name="com.example.quiz4.ui.fragments.users.UsersList"
+        android:name="com.example.quiz4.ui.fragments.users.UsersListFragment"
         android:label="UsersList" >
         <action
             android:id="@+id/action_usersList_to_showInfo"
             app:destination="@id/showInfo" />
-        <action
-            android:id="@+id/action_usersList_to_customDialogAddUser"
-            app:destination="@id/customDialogAddUser" />
+        <argument
+            android:name="newUser"
+            app:argType="com.example.quiz4.data.remote.model.UserInfo" />
     </fragment>
     <fragment
         android:id="@+id/showInfo"
-        android:name="com.example.quiz4.ui.fragments.showusersinfo.ShowInfo"
+        android:name="com.example.quiz4.ui.fragments.showusersinfo.ShowInfoFragment"
         android:label="ShowInfo" >
         <argument
             android:name="id"
             app:argType="string" />
     </fragment>
-    <dialog
-        android:id="@+id/customDialogAddUser"
-        android:name="com.example.quiz4.ui.fragments.users.CustomDialogAddUser"
-        android:label="CustomDialogAddUser" >
-        <action
-            android:id="@+id/action_customDialogAddUser_to_usersList"
-            app:destination="@id/usersList" />
-    </dialog>
     <fragment
         android:id="@+id/savedUsersFragment"
         android:name="com.example.quiz4.ui.fragments.savedusers.SavedUsersFragment"
         android:label="SavedUsersFragment" >
         <action
-            android:id="@+id/action_savedUsersFragment_to_customDialogEditUser"
-            app:destination="@id/customDialogEditUser" />
+            android:id="@+id/action_savedUsersFragment_to_localUserDialog"
+            app:destination="@id/localUserDialog" />
     </fragment>
     <dialog
-        android:id="@+id/customDialogEditUser"
-        android:name="com.example.quiz4.ui.fragments.savedusers.CustomDialogEditUser"
-        android:label="CustomDialogEditUser" >
+        android:id="@+id/localUserDialog"
+        android:name="com.example.quiz4.ui.dialogs.LocalUserDialog"
+        android:label="LocalUserDialog" >
         <argument
             android:name="user"
             app:argType="com.example.quiz4.data.local.model.User" />
-        <action
-            android:id="@+id/action_customDialogEditUser_to_savedUsersFragment"
-            app:destination="@id/savedUsersFragment" />
     </dialog>
 </navigation>

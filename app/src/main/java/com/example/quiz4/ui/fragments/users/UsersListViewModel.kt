@@ -3,6 +3,8 @@ package com.example.quiz4.ui.fragments.users
 import androidx.lifecycle.*
 import com.example.quiz4.data.repository.UserRepository
 import com.example.quiz4.data.local.model.User
+import com.example.quiz4.data.remote.model.UserInfo
+import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +27,7 @@ class UsersListViewModel @Inject constructor
     }.stateIn(
         initialValue = Result.Loading(),
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L)
+        started = SharingStarted.WhileSubscribed(1000L)
     )
 
     fun retry() {
@@ -37,6 +39,12 @@ class UsersListViewModel @Inject constructor
     fun insertUser(user: User) {
         viewModelScope.launch {
             userRepository.insertUser(user)
+        }
+    }
+
+    fun createUser(user: UserInfo) {
+        viewModelScope.launch {
+            userRepository.createUser(user)
         }
     }
 

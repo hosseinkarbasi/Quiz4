@@ -1,10 +1,8 @@
 package com.example.quiz4.ui.fragments.users
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,27 +17,23 @@ import com.example.quiz4.util.collectWithRepeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UsersList : Fragment(R.layout.users_list) {
+class UsersListFragment : Fragment(R.layout.users_list) {
 
-    private lateinit var binding: UsersListBinding
-    val navController by lazy { findNavController() }
+    private var _binding: UsersListBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModels<UsersListViewModel>()
+    private lateinit var myAdapterUsers: UsersRecyclerAdapter
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = DataBindingUtil.bind(view)!!
+        _binding = UsersListBinding.bind(view)
 
+        initRecyclerView()
         showUsers()
 
-        binding.AddUser.setOnClickListener {
-            navController.navigate(UsersListDirections.actionUsersListToCustomDialogAddUser())
-        }
     }
 
-
     private fun showUsers() = binding.apply {
-        val myAdapter = RecyclerAdapter()
         viewModel.getUsers.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             when (it) {
                 is Result.Loading -> {
@@ -55,21 +49,25 @@ class UsersList : Fragment(R.layout.users_list) {
                 }
                 is Result.Success -> {
                     loading.gone()
-                    myAdapter.submitList(it.data)
-                    recyclerViewMain.adapter = myAdapter
+                    myAdapterUsers.submitList(it.data)
                 }
             }
         }
-        swipe(myAdapter)
+        swipe(myAdapterUsers)
     }
 
-    private fun swipe(adapter: RecyclerAdapter) {
+    private fun initRecyclerView() {
+        myAdapterUsers = UsersRecyclerAdapter()
+        binding.recyclerViewMain.adapter = myAdapterUsers
+    }
+
+    private fun swipe(adapterUsers: UsersRecyclerAdapter) {
         val swipe = object : SwipeG(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        val user = adapter.addToDataBase(viewHolder.bindingAdapterPosition)
+                        val user = adapterUsers.addToDataBase(viewHolder.bindingAdapterPosition)
                         viewModel.insertHobbies(user._id)
                         viewModel.insertUser(
                             User(
@@ -81,13 +79,14 @@ class UsersList : Fragment(R.layout.users_list) {
                         )
                     }
                     ItemTouchHelper.RIGHT -> {
-                        val user = adapter.addToDataBase(viewHolder.bindingAdapterPosition)
-                        navController.navigate(UsersListDirections.actionUsersListToShowInfo((user._id)))
+                        val user = adapterUsers.addToDataBase(viewHolder.bindingAdapterPosition)
+                        val action =
+                            UsersListFragmentDirections.actionUsersListToShowInfo((user._id))
+                        findNavController().navigate(action)
                     }
                 }
             }
         }
-        binding.recyclerViewMain.adapter = adapter
         val touchHelper = ItemTouchHelper(swipe)
         touchHelper.attachToRecyclerView(binding.recyclerViewMain)
     }
@@ -99,4 +98,11 @@ class UsersList : Fragment(R.layout.users_list) {
     private fun View.gone() {
         visibility = View.GONE
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerViewMain.adapter = null
+        _binding = null
+    }
 }
+

@@ -14,12 +14,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedUsersViewModel @Inject constructor
-    (private val userRepository: UserRepository):ViewModel() {
+    (private val userRepository: UserRepository) : ViewModel() {
 
     private val _getUsersFromDataBase = MutableStateFlow<List<UserWithHobbies>>(emptyList())
     val getUsersFromDataBase = _getUsersFromDataBase.asStateFlow()
 
-    fun getUsersFromDataBase() {
+
+    init {
+        getUsersFromDataBase()
+    }
+
+    private fun getUsersFromDataBase() {
         viewModelScope.launch {
             val data = userRepository.getUsersFromDataBase()
             _getUsersFromDataBase.emit(data)
@@ -38,7 +43,7 @@ class SavedUsersViewModel @Inject constructor
         }
     }
 
-    fun createUser(user: UserInfo) {
+    fun createNewUser(user:UserInfo){
         viewModelScope.launch {
             userRepository.createUser(user)
         }

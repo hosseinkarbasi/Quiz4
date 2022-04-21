@@ -1,10 +1,13 @@
 package com.example.quiz4.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+
+@Parcelize
 data class UserInfo(
-    @SerializedName("firstName") val firstName: String?,
-    @SerializedName("lastName") val lastName: String?,
-    @SerializedName("nationalCode") val nationalCode: String?,
-    @SerializedName("hobbies") val hobbies: ArrayList<String>,
-)
+    val firstName: String?,
+    val lastName: String?,
+    val nationalCode: String?,
+    val hobbies: ArrayList<String>
+) : Parcelable

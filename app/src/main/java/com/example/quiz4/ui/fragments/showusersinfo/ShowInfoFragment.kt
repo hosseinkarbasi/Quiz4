@@ -18,11 +18,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
-class ShowInfo : Fragment(R.layout.show_info) {
+class ShowInfoFragment : Fragment(R.layout.show_info) {
 
     var imageByteArray: ByteArray? = null
-    private lateinit var binding: ShowInfoBinding
-    private val args by navArgs<ShowInfoArgs>()
+    private var _binding: ShowInfoBinding?=null
+    private val binding get() = _binding!!
+    private val args by navArgs<ShowInfoFragmentArgs>()
     private val viewModel by viewModels<ShowInfoVIewModel>()
 
     private val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()) {
@@ -38,7 +39,7 @@ class ShowInfo : Fragment(R.layout.show_info) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = DataBindingUtil.bind(view)!!
+        _binding = DataBindingUtil.bind(view)
 
         showDetailsUser()
         uploadImage()
@@ -98,5 +99,10 @@ class ShowInfo : Fragment(R.layout.show_info) {
 
     private fun View.gone() {
         visibility = View.GONE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
