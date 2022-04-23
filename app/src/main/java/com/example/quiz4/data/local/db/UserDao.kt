@@ -5,6 +5,7 @@ import com.example.quiz4.data.local.model.Hobie
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
 import com.example.quiz4.data.remote.model.UsersListItem
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.http.DELETE
 
@@ -17,7 +18,7 @@ interface UserDao {
     suspend fun insertHobbies(hobbies: List<Hobie>)
 
     @Query("SELECT * FROM user ")
-    suspend fun getUsers(): List<UserWithHobbies>
+    fun getUsers(): Flow<List<UserWithHobbies>>
 
     @Query("DELETE FROM user WHERE id=:id")
     suspend fun deleteUser(id: String)

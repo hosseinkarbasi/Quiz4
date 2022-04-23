@@ -27,7 +27,6 @@ class RecyclerAdapterSavedUser() :
                 it.name
             }.toString()
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
@@ -43,17 +42,11 @@ class RecyclerAdapterSavedUser() :
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<UserWithHobbies>() {
-        override fun areItemsTheSame(oldItem: UserWithHobbies, newItem: UserWithHobbies): Boolean {
-            return oldItem.user.id == newItem.user.id
-        }
+        override fun areItemsTheSame(oldItem: UserWithHobbies, newItem: UserWithHobbies) =
+            oldItem.user.id == newItem.user.id
 
-        override fun areContentsTheSame(
-            oldItem: UserWithHobbies,
-            newItem: UserWithHobbies
-        ): Boolean {
-            return oldItem.user.firstName == newItem.user.firstName &&
-                    oldItem.user.lastName == newItem.user.lastName &&
-                    oldItem.user.nationalCode == newItem.user.nationalCode
-        }
+
+        override fun areContentsTheSame(oldItem: UserWithHobbies, newItem: UserWithHobbies) =
+            oldItem == newItem
     }
 }

@@ -26,16 +26,22 @@ class UserDialog() : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setView(binding.root)
                 .setPositiveButton("Create") { _, _ ->
+                    with(binding) {
 
-                    val newUser = UserInfo(
-                        binding.EdFirstName.text.toString(),
-                        binding.EdLastName.text.toString(),
-                        binding.EdNatinalcode.text.toString(),
-                        hobbies as ArrayList<String>
-                    )
+                        if (movie.isChecked) hobbies.add("movie")
+                        if (coding.isChecked) hobbies.add("coding")
 
-                    listener.onDialogPositiveClick(this, newUser)
-                    dismiss()
+                        val newUser = UserInfo(
+                            EdFirstName.text.toString(),
+                            EdLastName.text.toString(),
+                            EdNatinalcode.text.toString(),
+                            hobbies as ArrayList<String>
+                        )
+
+                        listener.onDialogPositiveClick(this@UserDialog, newUser)
+                        dismiss()
+
+                    }
                 }
                 .setNeutralButton("Cancel") { _, _ ->
                     dismiss()

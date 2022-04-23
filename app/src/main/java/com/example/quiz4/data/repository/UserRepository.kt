@@ -24,7 +24,6 @@ class UserRepository @Inject constructor(
 ) {
 
     suspend fun getUsers(): Flow<Result<List<UsersListItem>>> {
-
         return requestFlow { remoteDataSource.getUsers() }
     }
 
@@ -59,7 +58,7 @@ class UserRepository @Inject constructor(
         }
     }
 
-    suspend fun getUsersFromDataBase(): List<UserWithHobbies> {
+    fun getUsersFromDataBase(): Flow<List<UserWithHobbies>> {
         return localDataSource.getUsers()
     }
 

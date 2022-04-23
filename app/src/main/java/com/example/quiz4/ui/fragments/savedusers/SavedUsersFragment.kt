@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.R
@@ -13,6 +14,7 @@ import com.example.quiz4.ui.dialogs.LocalUserDialog
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SavedUsersFragment : Fragment(R.layout.users_saved) {
@@ -28,13 +30,13 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
 
         initRecyclerView()
         showUsersSaved()
+        swipe(myAdapter)
     }
 
     private fun showUsersSaved() {
         viewModel.getUsersFromDataBase.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             myAdapter.submitList(it)
         }
-        swipe(myAdapter)
     }
 
     private fun swipe(myAdapter: RecyclerAdapterSavedUser) {

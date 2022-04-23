@@ -26,7 +26,8 @@ class UsersRecyclerAdapter() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
         CustomViewHolder(
-            ShowUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ShowUserBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false)
         )
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
@@ -34,12 +35,10 @@ class UsersRecyclerAdapter() :
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<UsersListItem>() {
-        override fun areItemsTheSame(oldItem: UsersListItem, newItem: UsersListItem): Boolean {
-            return oldItem._id == newItem._id
-        }
+        override fun areItemsTheSame(oldItem: UsersListItem, newItem: UsersListItem) =
+            oldItem._id == newItem._id
 
-        override fun areContentsTheSame(oldItem: UsersListItem, newItem: UsersListItem): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: UsersListItem, newItem: UsersListItem) =
+            oldItem == newItem
     }
 }

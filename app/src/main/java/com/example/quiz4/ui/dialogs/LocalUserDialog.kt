@@ -12,7 +12,6 @@ class LocalUserDialog(private val userInfo: (UserInfo) -> Unit) : DialogFragment
     private var _binding: AddUserDialogBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = AddUserDialogBinding.inflate(layoutInflater)
         val hobbies = mutableListOf<String>()
