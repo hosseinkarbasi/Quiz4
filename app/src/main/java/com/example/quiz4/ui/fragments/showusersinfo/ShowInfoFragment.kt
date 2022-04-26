@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -20,22 +21,13 @@ import java.io.ByteArrayOutputStream
 @AndroidEntryPoint
 class ShowInfoFragment : Fragment(R.layout.show_info) {
 
-    var imageByteArray: ByteArray? = null
-    private var _binding: ShowInfoBinding?=null
+    var byteArray: ByteArray? = null
+    private lateinit var gallery: ActivityResultLauncher<String>
+    private lateinit var camera: ActivityResultLauncher<Void?>
+    private var _binding: ShowInfoBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<ShowInfoFragmentArgs>()
     private val viewModel by viewModels<ShowInfoVIewModel>()
-
-    private val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()) {
-        val imageUri = context?.contentResolver?.openInputStream(it)?.readBytes()
-        imageByteArray = imageUri
-        binding.imgProfile.setImageURI(it)
-    }
-
-    private val camera = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-        imageByteArray = it.toByteArray()
-        binding.imgProfile.setImageBitmap(it)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,8 +36,25 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
         showDetailsUser()
         uploadImage()
 
+
+        gallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                val imageUri = context?.contentResolver?.openInputStream(uri)?.readBytes()
+                byteArray = imageUri
+                binding.imgProfile.setImageURI(uri)
+            }
+        }
+
+        camera = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+            if (bitmap != null) {
+                byteArray = bitmap.byteArray()
+                binding.imgProfile.setImageBitmap(bitmap)
+            }
+        }
+
+
         binding.uploadImage.setOnClickListener {
-            viewModel.uploadImage(args.id, imageByteArray!!)
+            viewModel.uploadImage(args.id, byteArray!!)
         }
     }
 
@@ -75,7 +84,7 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
             builder.setMessage("Select Camera or Gallery")
 
             builder.setPositiveButton("Gallery") { dialog, _ ->
-                selectImage.launch("image/*")
+                gallery.launch("image/*")
                 dialog.dismiss()
             }
             builder.setNeutralButton("Camera") { dialog, _ ->
@@ -83,13 +92,6 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
                 dialog.dismiss()
             }
             builder.create().show()
-        }
-    }
-
-    private fun Bitmap.toByteArray(): ByteArray {
-        ByteArrayOutputStream().apply {
-            compress(Bitmap.CompressFormat.JPEG, 10, this)
-            return toByteArray()
         }
     }
 
@@ -101,8 +103,16 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
         visibility = View.GONE
     }
 
+    private fun Bitmap.byteArray(): ByteArray {
+        ByteArrayOutputStream().apply {
+            compress(Bitmap.CompressFormat.JPEG, 10, this)
+            return toByteArray()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }

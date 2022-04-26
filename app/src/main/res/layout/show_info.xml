@@ -27,8 +27,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginTop="48dp"
             app:cardCornerRadius="50dp"
             app:cardElevation="36dp"
@@ -38,12 +38,14 @@
 
             <ImageButton
                 android:id="@+id/img_profile"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                app:imgUrl="@{user.image}"
-                tools:srcCompat="@tools:sample/avatars" />
-        </androidx.cardview.widget.CardView>
+                android:layout_width="210dp"
+                android:layout_height="213dp"
+                android:src="@drawable/ic_baseline_add_circle_24"
+                android:translationX="-4dp"
+                android:translationY="-6dp"
+                app:imgUrl="@{user.image}" />
 
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tv_hobbies_text"
@@ -127,12 +129,14 @@
             app:layout_constraintStart_toEndOf="@+id/tv_first_name_text"
             app:layout_constraintTop_toBottomOf="@+id/uploadImage" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/uploadImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:cornerRadius="8dp"
             android:layout_marginTop="24dp"
-            android:text="Upload Image"
+            android:backgroundTint="#FF5500"
+            android:text="Save Photo"
             app:layout_constraintEnd_toEndOf="@+id/cardView"
             app:layout_constraintStart_toStartOf="@+id/cardView"
             app:layout_constraintTop_toBottomOf="@+id/cardView" />

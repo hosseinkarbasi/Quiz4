@@ -2,10 +2,8 @@ package com.example.quiz4.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.quiz4.R
@@ -13,7 +11,6 @@ import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.databinding.ActivityMainBinding
 import com.example.quiz4.ui.dialogs.UserDialog
 import com.example.quiz4.ui.fragments.users.UsersListViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

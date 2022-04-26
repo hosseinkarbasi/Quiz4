@@ -1,12 +1,13 @@
 package com.example.quiz4.ui.dialogs
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.example.quiz4.R
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.databinding.AddUserDialogBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class UserDialog() : DialogFragment() {
 
@@ -23,8 +24,9 @@ class UserDialog() : DialogFragment() {
         val hobbies = mutableListOf<String>()
 
         return activity?.let {
-            val builder = AlertDialog.Builder(it)
+            val builder = MaterialAlertDialogBuilder(it, R.style.RoundShapeTheme)
             builder.setView(binding.root)
+                .setTitle("Create User")
                 .setPositiveButton("Create") { _, _ ->
                     with(binding) {
 
