@@ -9,7 +9,7 @@ import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.databinding.AddUserDialogBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class UserDialog() : DialogFragment() {
+class UserDialog : DialogFragment() {
 
     private var _binding: AddUserDialogBinding? = null
     private val binding get() = _binding!!

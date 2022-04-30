@@ -4,10 +4,8 @@ import androidx.lifecycle.*
 import com.example.quiz4.data.repository.UserRepository
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.remote.model.UserInfo
-import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,7 +17,7 @@ class UsersListViewModel @Inject constructor
 
     private val channel = Channel<Boolean> { }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+
     val getUsers = channel.receiveAsFlow().flatMapLatest {
         userRepository.getUsers()
     }.stateIn(

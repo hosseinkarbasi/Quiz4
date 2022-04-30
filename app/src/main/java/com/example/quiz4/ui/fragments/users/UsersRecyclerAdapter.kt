@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.databinding.ShowUserBinding
 
-class UsersRecyclerAdapter() :
+class UsersRecyclerAdapter :
     ListAdapter<UsersListItem, UsersRecyclerAdapter.CustomViewHolder>(DiffCallBack()) {
 
     fun addToDataBase(id: Int): UsersListItem {

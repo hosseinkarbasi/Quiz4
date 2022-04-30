@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/usersList"
         android:name="com.example.quiz4.ui.fragments.users.UsersListFragment"
-        android:label="UsersList" >
+        android:label="UsersList">
         <action
             android:id="@+id/action_usersList_to_showInfo"
             app:destination="@id/showInfo" />
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/showInfo"
         android:name="com.example.quiz4.ui.fragments.showusersinfo.ShowInfoFragment"
-        android:label="ShowInfo" >
+        android:label="ShowInfo">
         <argument
             android:name="id"
             app:argType="string" />
@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/savedUsersFragment"
         android:name="com.example.quiz4.ui.fragments.savedusers.SavedUsersFragment"
-        android:label="SavedUsersFragment" >
+        android:label="SavedUsersFragment">
         <action
             android:id="@+id/action_savedUsersFragment_to_localUserDialog"
             app:destination="@id/localUserDialog" />
@@ -34,9 +34,21 @@
     <dialog
         android:id="@+id/localUserDialog"
         android:name="com.example.quiz4.ui.dialogs.LocalUserDialog"
-        android:label="LocalUserDialog" >
+        android:label="LocalUserDialog">
         <argument
             android:name="user"
             app:argType="com.example.quiz4.data.local.model.User" />
     </dialog>
+    <activity
+        android:id="@+id/MainActivity"
+        android:name="com.example.quiz4.ui.activity.Hilt_MainActivity"
+        android:label="MainActivity">
+        <action
+            android:id="@+id/action_activity_to_userDialog"
+            app:destination="@id/userDialog" />
+    </activity>
+    <dialog
+        android:id="@+id/userDialog"
+        android:name="com.example.quiz4.ui.dialogs.UserDialog"
+        android:label="UserDialog" />
 </navigation>

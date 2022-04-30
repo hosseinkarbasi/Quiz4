@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream
 @AndroidEntryPoint
 class ShowInfoFragment : Fragment(R.layout.show_info) {
 
-    var byteArray: ByteArray? = null
+    private var byteArray: ByteArray? = null
     private lateinit var gallery: ActivityResultLauncher<String>
     private lateinit var camera: ActivityResultLauncher<Void?>
     private var _binding: ShowInfoBinding? = null

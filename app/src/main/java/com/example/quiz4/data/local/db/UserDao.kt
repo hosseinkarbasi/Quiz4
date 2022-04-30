@@ -4,10 +4,7 @@ import androidx.room.*
 import com.example.quiz4.data.local.model.Hobie
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
-import com.example.quiz4.data.remote.model.UsersListItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import retrofit2.http.DELETE
 
 @Dao
 interface UserDao {
@@ -24,8 +21,5 @@ interface UserDao {
     suspend fun deleteUser(id: String)
 
     @Update
-    fun updateUser(user: User)
-
-    @Update
-    fun updateHobbies(hobbies: List<Hobie>)
+    suspend fun updateUser(user: User)
 }

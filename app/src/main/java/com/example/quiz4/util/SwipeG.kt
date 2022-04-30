@@ -42,10 +42,10 @@ abstract class SwipeG(context: Context) :
             actionState,
             isCurrentlyActive
         )
-//            .addSwipeLeftBackgroundColor(saveColor)
-//            .addSwipeLeftActionIcon(saveIcon)
-//            .addSwipeRightBackgroundColor(detailsColor)
-//            .addSwipeRightActionIcon(detailsIcon)
+            .addSwipeLeftBackgroundColor(saveColor)
+            .addSwipeLeftActionIcon(saveIcon)
+            .addSwipeRightBackgroundColor(detailsColor)
+            .addSwipeRightActionIcon(detailsIcon)
             .create()
             .decorate()
 

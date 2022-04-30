@@ -9,7 +9,7 @@ import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
 import com.example.quiz4.databinding.ShowInfoSavedUsersBinding
 
-class RecyclerAdapterSavedUser() :
+class RecyclerAdapterSavedUser :
     ListAdapter<UserWithHobbies, RecyclerAdapterSavedUser.CustomViewHolder>(DiffCallBack()) {
 
     fun swipe(id: Int): User {

@@ -1,12 +1,10 @@
 package com.example.quiz4.ui.fragments.users
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +15,6 @@ import com.example.quiz4.util.Result
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UsersListFragment : Fragment(R.layout.users_list) {
@@ -38,24 +35,25 @@ class UsersListFragment : Fragment(R.layout.users_list) {
 
     private fun showUsers() = binding.apply {
         viewModel.retry()
-        lifecycleScope.launch {
-            viewModel.getUsers.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
-                when (it) {
-                    is Result.Loading -> {
-                        loading.visible()
-                    }
-                    is Result.Error -> {
-                        retry.visible()
-                        loading.visible()
-                        retry.setOnClickListener {
-                            viewModel.retry()
-                        }
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                    }
-                    is Result.Success -> {
-                        loading.gone()
-                        myAdapterUsers.submitList(it.data)
-                    }
+        viewModel.getUsers.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
+            when (it) {
+                is Result.Loading -> {
+                    loading.visible()
+                    loading.playAnimation()
+                    retry.gone()
+                }
+                is Result.Error -> {
+                    retry.visible()
+                    loading.visible()
+                    loading.playAnimation()
+                    retry.setOnClickListener { viewModel.retry() }
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                }
+                is Result.Success -> {
+                    retry.gone()
+                    loading.gone()
+                    loading.pauseAnimation()
+                    myAdapterUsers.submitList(it.data)
                 }
             }
         }
@@ -68,7 +66,6 @@ class UsersListFragment : Fragment(R.layout.users_list) {
 
     private fun swipe(adapterUsers: UsersRecyclerAdapter) {
         val swipe = object : SwipeG(requireContext()) {
-            @SuppressLint("NotifyDataSetChanged")
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
                 when (direction) {
@@ -83,7 +80,7 @@ class UsersListFragment : Fragment(R.layout.users_list) {
                                 user.nationalCode
                             )
                         )
-                        binding.recyclerViewMain.adapter?.notifyDataSetChanged()
+                        binding.recyclerViewMain.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     }
                     ItemTouchHelper.RIGHT -> {
                         val user = adapterUsers.addToDataBase(viewHolder.bindingAdapterPosition)
@@ -111,6 +108,5 @@ class UsersListFragment : Fragment(R.layout.users_list) {
         binding.recyclerViewMain.adapter = null
         _binding = null
     }
-
 }
 

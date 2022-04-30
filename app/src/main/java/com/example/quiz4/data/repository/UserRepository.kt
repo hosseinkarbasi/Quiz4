@@ -1,16 +1,18 @@
 package com.example.quiz4.data.repository
 
-import com.example.quiz4.data.local.db.UserDao
+import com.example.quiz4.data.local.LocalDataSource
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.data.local.model.UserWithHobbies
+import com.example.quiz4.data.remote.RemoteDataSource
 import com.example.quiz4.data.remote.model.UserInfo
 import com.example.quiz4.data.remote.model.UsersListItem
-import com.example.quiz4.data.remote.network.UserApi
+import com.example.quiz4.di.IoDispatcher
 import com.example.quiz4.util.Mapper
 import com.example.quiz4.util.Result
+import com.example.quiz4.util.requestFlow
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -19,25 +21,23 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(
-    private val remoteDataSource: UserApi,
-    private val localDataSource: UserDao
-) {
+    @IoDispatcher
+    private val dispatcher: CoroutineDispatcher,
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+
+    ) {
 
     suspend fun getUsers(): Flow<Result<List<UsersListItem>>> {
-        return requestFlow { remoteDataSource.getUsers() }
+        return requestFlow(dispatcher) { remoteDataSource.getUsers() }
     }
 
     suspend fun showInfoUser(id: String): Flow<Result<UsersListItem>> {
-        return requestFlow { remoteDataSource.getShowInfo(id) }
-
+        return requestFlow(dispatcher) { remoteDataSource.getShowInfo(id) }
     }
 
     suspend fun createUser(user: UserInfo): Response<String> {
-        val data: Response<String>
-        withContext(Dispatchers.IO) {
-            data = remoteDataSource.createAccount(user)
-        }
-        return data
+        return remoteDataSource.createAccount(user)
     }
 
     suspend fun uploadImage(id: String, image: MultipartBody.Part) {
@@ -59,7 +59,7 @@ class UserRepository @Inject constructor(
     }
 
     fun getUsersFromDataBase(): Flow<List<UserWithHobbies>> {
-        return localDataSource.getUsers()
+        return localDataSource.gerUsers()
     }
 
     suspend fun deleteUser(id: String) {
@@ -74,21 +74,4 @@ class UserRepository @Inject constructor(
         }
     }
 
-    private inline fun <T> requestFlow(
-        crossinline apiCall: suspend () -> Response<T>
-    ): Flow<Result<T>> {
-        return flow {
-            try {
-                emit(Result.Loading())
-                val response = apiCall()
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        emit(Result.Success(it))
-                    }
-                }
-            } catch (e: Exception) {
-                emit(Result.Error("Please Check Your Internet"))
-            }
-        }
-    }
 }
