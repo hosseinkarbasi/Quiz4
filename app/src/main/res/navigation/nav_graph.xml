@@ -39,16 +39,4 @@
             android:name="user"
             app:argType="com.example.quiz4.data.local.model.User" />
     </dialog>
-    <activity
-        android:id="@+id/MainActivity"
-        android:name="com.example.quiz4.ui.activity.Hilt_MainActivity"
-        android:label="MainActivity">
-        <action
-            android:id="@+id/action_activity_to_userDialog"
-            app:destination="@id/userDialog" />
-    </activity>
-    <dialog
-        android:id="@+id/userDialog"
-        android:name="com.example.quiz4.ui.dialogs.UserDialog"
-        android:label="UserDialog" />
 </navigation>
