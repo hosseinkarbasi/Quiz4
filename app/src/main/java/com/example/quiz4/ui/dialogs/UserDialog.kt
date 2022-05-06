@@ -15,10 +15,6 @@ class UserDialog : DialogFragment() {
     private val binding get() = _binding!!
     private lateinit var listener: NoticeDialogListener
 
-    interface NoticeDialogListener {
-        fun onDialogPositiveClick(dialog: DialogFragment, userInfo: UserInfo)
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = AddUserDialogBinding.inflate(layoutInflater)
         val hobbies = mutableListOf<String>()
@@ -67,4 +63,8 @@ class UserDialog : DialogFragment() {
         super.onDestroyView()
         _binding = null
     }
+}
+
+interface NoticeDialogListener {
+    fun onDialogPositiveClick(dialog: DialogFragment, userInfo: UserInfo)
 }

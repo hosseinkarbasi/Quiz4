@@ -1,6 +1,8 @@
 package com.example.quiz4.di
 
 import com.example.quiz4.data.remote.network.UserApi
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,13 +43,17 @@ object ApiModule {
 
     @Provides
     @Singleton
+    fun gson(): Gson = GsonBuilder().setLenient().create()
+
+    @Provides
+    @Singleton
     fun retrofit(
         client: OkHttpClient,
     ): UserApi {
         return Retrofit.Builder()
-            .baseUrl("http://papp.ir/api/v1/")
+            .baseUrl("http://51.195.19.222:3000/api/v1/")
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson()))
             .build()
             .create(UserApi::class.java)
     }

@@ -36,7 +36,6 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
         showDetailsUser()
         uploadImage()
 
-
         gallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 val imageUri = context?.contentResolver?.openInputStream(uri)?.readBytes()
@@ -51,7 +50,6 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
                 binding.imgProfile.setImageBitmap(bitmap)
             }
         }
-
 
         binding.uploadImage.setOnClickListener {
             viewModel.uploadImage(args.id, byteArray!!)
@@ -114,5 +112,4 @@ class ShowInfoFragment : Fragment(R.layout.show_info) {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -11,7 +11,7 @@ interface UserApi {
     @GET("users")
     suspend fun getUsers(): Response<List<UsersListItem>>
 
-    @GET("http://papp.ir/api/v1/users/{id}")
+    @GET("users/{id}")
     suspend fun getShowInfo(@Path("id") id: String): Response<UsersListItem>
 
     @POST("users")

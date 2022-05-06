@@ -27,7 +27,6 @@ class UserRepository @Inject constructor(
     private val localDataSource: LocalDataSource,
 
     ) {
-
     suspend fun getUsers(): Flow<Result<List<UsersListItem>>> {
         return requestFlow(dispatcher) { remoteDataSource.getUsers() }
     }
@@ -73,5 +72,4 @@ class UserRepository @Inject constructor(
             localDataSource.updateUser(user)
         }
     }
-
 }

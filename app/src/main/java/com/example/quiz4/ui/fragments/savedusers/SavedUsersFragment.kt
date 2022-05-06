@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.R
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.databinding.UsersSavedBinding
-import com.example.quiz4.ui.dialogs.LocalUserDialog
+import com.example.quiz4.ui.dialogs.BottomSheetLocalUser
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +49,7 @@ class SavedUsersFragment : Fragment(R.layout.users_saved) {
                     }
                     ItemTouchHelper.LEFT -> {
 
-                        val dialog = LocalUserDialog {
+                        val dialog = BottomSheetLocalUser(user) {
                             viewModel.createNewUser(it)
                             viewModel.updateUser(
                                 User(

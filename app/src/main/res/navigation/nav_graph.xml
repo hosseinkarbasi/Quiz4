@@ -39,4 +39,12 @@
             android:name="user"
             app:argType="com.example.quiz4.data.local.model.User" />
     </dialog>
+    <dialog
+        android:id="@+id/bottomSheetUser"
+        android:name="com.example.quiz4.ui.dialogs.BottomSheetUser"
+        android:label="BottomSheetUser" />
+    <dialog
+        android:id="@+id/userDialog"
+        android:name="com.example.quiz4.ui.dialogs.UserDialog"
+        android:label="UserDialog" />
 </navigation>
