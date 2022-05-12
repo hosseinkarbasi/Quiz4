@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz4.R
 import com.example.quiz4.data.local.model.User
 import com.example.quiz4.databinding.UsersListBinding
+import com.example.quiz4.ui.dialogs.UserDialogFragment
 import com.example.quiz4.util.Result
 import com.example.quiz4.util.SwipeG
 import com.example.quiz4.util.collectWithRepeatOnLifecycle
@@ -31,11 +32,21 @@ class UsersListFragment : Fragment(R.layout.users_list) {
         initRecyclerView()
         showUsers()
         swipe(myAdapterUsers)
+        createUser()
+    }
+
+    private fun createUser(){
+        binding.AddUser.setOnClickListener {
+            val dialog = UserDialogFragment {
+                viewModel.createUser(it)
+            }
+            dialog.show(childFragmentManager, "salam")
+        }
     }
 
     private fun showUsers() = binding.apply {
-        viewModel.retry()
-        viewModel.getUsers.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
+        viewModel.getUsers()
+        viewModel.getUser2.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             when (it) {
                 is Result.Loading -> {
                     loading.visible()
@@ -46,7 +57,7 @@ class UsersListFragment : Fragment(R.layout.users_list) {
                     retry.visible()
                     loading.visible()
                     loading.playAnimation()
-                    retry.setOnClickListener { viewModel.retry() }
+                    retry.setOnClickListener { viewModel.getUsers() }
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Success -> {

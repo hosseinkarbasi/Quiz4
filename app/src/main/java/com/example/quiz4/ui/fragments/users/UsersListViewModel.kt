@@ -3,9 +3,10 @@ package com.example.quiz4.ui.fragments.users
 import androidx.lifecycle.*
 import com.example.quiz4.data.repository.UserRepository
 import com.example.quiz4.data.local.model.User
+import com.example.quiz4.data.remote.model.UserInfo
+import com.example.quiz4.data.remote.model.UsersListItem
 import com.example.quiz4.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,19 +15,23 @@ import javax.inject.Inject
 class UsersListViewModel @Inject constructor
     (private val userRepository: UserRepository) : ViewModel() {
 
-    private val channel = Channel<Boolean> { }
+    private val _getUser2: MutableStateFlow<Result<List<UsersListItem>>> =
+        MutableStateFlow(Result.Loading())
+    val getUser2 = _getUser2.asStateFlow()
 
-    val getUsers = channel.receiveAsFlow().flatMapLatest {
-        userRepository.getUsers()
-    }.stateIn(
-        initialValue = Result.Loading(),
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L)
-    )
 
-    fun retry() {
+    fun createUser(user: UserInfo) {
         viewModelScope.launch {
-            channel.send(true)
+            userRepository.createUser(user)
+        }
+        getUsers()
+    }
+
+    fun getUsers() {
+        viewModelScope.launch {
+            userRepository.getUsers().collect {
+                _getUser2.emit(it)
+            }
         }
     }
 
