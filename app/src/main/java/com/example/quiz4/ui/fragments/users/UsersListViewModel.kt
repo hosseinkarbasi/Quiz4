@@ -15,9 +15,9 @@ import javax.inject.Inject
 class UsersListViewModel @Inject constructor
     (private val userRepository: UserRepository) : ViewModel() {
 
-    private val _getUser2: MutableStateFlow<Result<List<UsersListItem>>> =
+    private val _getUser: MutableStateFlow<Result<List<UsersListItem>>> =
         MutableStateFlow(Result.Loading())
-    val getUser2 = _getUser2.asStateFlow()
+    val getUser = _getUser.asStateFlow()
 
 
     fun createUser(user: UserInfo) {
@@ -30,7 +30,7 @@ class UsersListViewModel @Inject constructor
     fun getUsers() {
         viewModelScope.launch {
             userRepository.getUsers().collect {
-                _getUser2.emit(it)
+                _getUser.emit(it)
             }
         }
     }

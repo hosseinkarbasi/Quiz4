@@ -46,7 +46,7 @@ class UsersListFragment : Fragment(R.layout.users_list) {
 
     private fun showUsers() = binding.apply {
         viewModel.getUsers()
-        viewModel.getUser2.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
+        viewModel.getUser.collectWithRepeatOnLifecycle(viewLifecycleOwner) {
             when (it) {
                 is Result.Loading -> {
                     loading.visible()
